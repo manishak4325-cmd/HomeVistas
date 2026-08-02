@@ -1,5 +1,4 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150?text=HomeVista" alt="HomeVista Logo" width="120" />
   <h1>🏡 HomeVista - Premium Real Estate Portal</h1>
   <p>A full-stack, feature-rich MERN real estate platform built for modern buyers, agents, and administrators.</p>
 </div>
