@@ -1,41 +1,32 @@
-# HomeVista - Frontend
+# React + TypeScript + Vite
 
-This is the frontend application for the HomeVista Real Estate Portal, built with React, TypeScript, and Vite.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Live Demo
-[https://home-vistas-ten.vercel.app/](https://home-vistas-ten.vercel.app/)
+Currently, two official plugins are available:
 
-## Technologies Used
-- **React 18**
-- **TypeScript**
-- **Vite**
-- **Tailwind CSS**
-- **Zustand** (State Management)
-- **React Router DOM** (Routing)
-- **Socket.io-client** (Real-time chat)
-- **Lucide React** (Icons)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Local Development
+## React Compiler
 
-### 1. Install Dependencies
-```bash
-npm install
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
 
-### 2. Environment Variables
-Create a `.env` file in this directory with the following:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-*(If testing against production backend, use `VITE_API_URL=https://homevistas-backend.onrender.com/api`)*
-
-### 3. Start Development Server
-```bash
-npm run dev
-```
-
-## Build for Production
-```bash
-npm run build
-```
-This will compile the TypeScript code and bundle the application into the `dist` folder.
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
