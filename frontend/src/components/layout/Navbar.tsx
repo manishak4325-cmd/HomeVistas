@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
-import { Home, User as UserIcon, LogOut, Menu, X, Heart } from 'lucide-react';
+import { Home, User as UserIcon, LogOut, Menu, X, Heart, Sun, Moon, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
+import { useTheme } from '../ThemeProvider';
 
 const Navbar = () => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const handleLogout = () => {
     logout();
@@ -44,6 +46,9 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 )}
+                <Link to="/inbox" className="text-muted-foreground hover:text-primary transition-colors">
+                  <MessageSquare className="h-5 w-5" />
+                </Link>
                 
                 <div className="flex items-center gap-2">
                   <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -71,6 +76,14 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
+            
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-accent"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
           </div>
 
           <div className="md:hidden flex items-center">
@@ -110,6 +123,13 @@ const Navbar = () => {
                 </Link>
               </>
             )}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:bg-accent"
+            >
+              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </button>
           </div>
         </div>
       )}

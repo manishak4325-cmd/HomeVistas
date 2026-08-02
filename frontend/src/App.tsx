@@ -14,6 +14,8 @@ import { Matchmaker } from './pages/Matchmaker';
 import { MatchResults } from './pages/MatchResults';
 import { Compare } from './pages/Compare';
 import { CompareBottomBar } from './components/CompareBottomBar';
+import Inbox from './pages/Inbox';
+import ChatWindow from './pages/ChatWindow';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
             <Route path="matchmaker" element={<Matchmaker />} />
             <Route path="match-results" element={<MatchResults />} />
             <Route path="compare" element={<Compare />} />
+            <Route path="inbox" element={<Inbox />} />
+            <Route path="chat/:id" element={<ChatWindow />} />
           </Route>
         </Routes>
       <CompareBottomBar />

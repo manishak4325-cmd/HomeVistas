@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Bed, Bath, Square, MapPin, Heart, Mail, CheckCircle, ShieldCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { Bed, Bath, Square, MapPin, Heart, Mail, CheckCircle, ShieldCheck, ChevronDown, ChevronUp, Star, MessageSquare } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
+import { ReviewForm } from '../components/ReviewForm';
+import { ReviewList } from '../components/ReviewList';
 // import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'; // Optional: integrate later
 import 'leaflet/dist/leaflet.css';
 
@@ -15,6 +17,7 @@ const PropertyDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showNeighborhoodDetails, setShowNeighborhoodDetails] = useState(false);
+  const [reviews, setReviews] = useState<any[]>([]);
 
   // Inquiry form
   const [formData, setFormData] = useState({
@@ -35,6 +38,9 @@ const PropertyDetail = () => {
           const isFav = favRes.data.some((fav: any) => fav.property._id === data._id);
           setIsFavorite(isFav);
         }
+
+        const reviewsRes = await api.get(`/reviews/property/${id}`);
+        setReviews(reviewsRes.data);
       } catch (error) {
         console.error('Error fetching property', error);
         toast.error('Failed to load property details');
@@ -44,6 +50,16 @@ const PropertyDetail = () => {
     };
     fetchProperty();
   }, [id, user]);
+
+  const fetchReviews = async () => {
+    try {
+      const { data } = await api.get(`/reviews/property/${id}`);
+      setReviews(data);
+      // We could also re-fetch property to update average rating, but for now just fetching reviews is enough
+    } catch (error) {
+      console.error('Failed to fetch updated reviews');
+    }
+  };
 
   const toggleFavorite = async () => {
     if (!user) {
@@ -79,6 +95,24 @@ const PropertyDetail = () => {
     }
   };
 
+  const startChat = async () => {
+    if (!user) {
+      toast.error('Please login to chat with the owner');
+      return navigate('/login');
+    }
+    if (user._id === property.owner._id) {
+      toast.error('You cannot chat with yourself!');
+      return;
+    }
+    
+    try {
+      const { data } = await api.post(`/chat/property/${property._id}`);
+      navigate(`/chat/${data._id}`);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to start chat');
+    }
+  };
+
   if (loading) return (
     <div className="max-w-7xl mx-auto px-4 py-8 animate-pulse">
       <div className="h-96 bg-muted rounded-xl mb-8"></div>
@@ -103,9 +137,16 @@ const PropertyDetail = () => {
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold mb-2">{property.title}</h1>
-          <div className="flex items-center text-muted-foreground">
+          <div className="flex items-center text-muted-foreground mb-2">
             <MapPin className="h-5 w-5 mr-1" />
             <span className="text-lg">{property.location}, {property.city}</span>
+          </div>
+          <div className="flex items-center gap-1 text-sm">
+            <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+            <span className="font-semibold text-base">{property.rating ? property.rating.toFixed(1) : 'New'}</span>
+            <span className="text-muted-foreground ml-1">
+              ({property.numReviews || 0} reviews)
+            </span>
           </div>
         </div>
         <div className="flex flex-col items-end">
@@ -255,6 +296,22 @@ const PropertyDetail = () => {
               )}
             </div>
           )}
+
+          {/* Reviews Section */}
+          <div className="mb-8 mt-12">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+              <Star className="h-6 w-6 text-yellow-400 fill-yellow-400" />
+              Property Reviews
+            </h2>
+            {user ? (
+              <ReviewForm propertyId={property._id} onReviewAdded={fetchReviews} />
+            ) : (
+              <div className="bg-muted p-4 rounded-xl text-center mb-8 border border-border">
+                <p className="text-muted-foreground">Please log in to write a review.</p>
+              </div>
+            )}
+            <ReviewList reviews={reviews} />
+          </div>
         </div>
 
         {/* Sidebar */}
@@ -312,12 +369,21 @@ const PropertyDetail = () => {
                   onChange={e => setFormData({...formData, message: e.target.value})}
                 ></textarea>
               </div>
-              <button 
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-md font-medium flex justify-center items-center gap-2 transition-colors"
-              >
-                <Mail className="h-5 w-5" /> Send Message
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  type="submit"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground py-3 rounded-md font-medium flex justify-center items-center gap-2 transition-colors"
+                >
+                  <Mail className="h-5 w-5" /> Email
+                </button>
+                <button 
+                  type="button"
+                  onClick={startChat}
+                  className="flex-1 bg-secondary hover:bg-secondary/90 text-secondary-foreground py-3 rounded-md font-medium flex justify-center items-center gap-2 transition-colors"
+                >
+                  <MessageSquare className="h-5 w-5" /> Chat
+                </button>
+              </div>
             </form>
           </div>
         </div>

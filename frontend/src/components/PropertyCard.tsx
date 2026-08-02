@@ -1,4 +1,4 @@
-import { Bed, Bath, Square, MapPin, Scale, ShieldCheck, Sparkles } from 'lucide-react';
+import { Bed, Bath, Square, MapPin, Scale, ShieldCheck, Sparkles, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCompareStore } from '../store/useCompareStore';
 
@@ -14,6 +14,8 @@ interface Property {
   city: string;
   images: string[];
   matchScore?: number;
+  rating?: number;
+  numReviews?: number;
   neighborhood?: {
     name: string;
     overallScore: number;
@@ -70,9 +72,16 @@ export const PropertyCard = ({ property, showMatchScore = false }: { property: P
         </div>
         
         <div className="p-5">
-          <h3 className="font-semibold text-lg line-clamp-1 mb-2 group-hover:text-primary transition-colors">
+          <h3 className="font-semibold text-lg line-clamp-1 mb-1 group-hover:text-primary transition-colors">
             {property.title}
           </h3>
+          <div className="flex items-center gap-1 text-sm mb-2">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="font-semibold">{property.rating ? property.rating.toFixed(1) : 'New'}</span>
+            <span className="text-muted-foreground ml-1">
+              ({property.numReviews || 0} reviews)
+            </span>
+          </div>
           <div className="flex items-center text-muted-foreground text-sm mb-4">
             <MapPin className="h-4 w-4 mr-1 shrink-0" />
             <span className="line-clamp-1">{property.location}, {property.city}</span>

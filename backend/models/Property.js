@@ -33,6 +33,8 @@ const propertySchema = new mongoose.Schema(
       required: true,
     },
     views: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
+    numReviews: { type: Number, default: 0 },
   },
   {
     timestamps: true,
