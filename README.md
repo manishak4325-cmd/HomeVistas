@@ -2,13 +2,19 @@
 
 A full-stack MERN (MongoDB, Express, React, Node.js) real estate portal.
 
+## Live Demo
+- **Frontend App:** [https://home-vistas-ten.vercel.app/](https://home-vistas-ten.vercel.app/)
+- **Backend API:** [https://homevistas-backend.onrender.com](https://homevistas-backend.onrender.com)
+
 ## Features
 - **User Authentication**: Register/Login with JWT. Roles: User, Agent, Admin.
 - **Property Listings**: Agents and Admins can create and manage properties.
 - **Search & Filters**: Advanced search by location, type, price, and bedrooms.
 - **Favorites**: Users can save properties to their favorites list.
-- **Inquiries**: Built-in messaging system to contact agents directly.
+- **Property Reviews**: Users can rate properties and leave text reviews.
+- **Real-Time Chat**: Live socket.io chat between buyers and property owners.
 - **Admin Dashboard**: Approvals workflow for new properties and user management.
+- **Dark Mode**: Fully supported dark/light theme toggling.
 
 ## Tech Stack
 - **Backend**: Node.js, Express, MongoDB, Mongoose, JWT.
