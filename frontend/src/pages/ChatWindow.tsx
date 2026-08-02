@@ -10,8 +10,8 @@ const ChatWindow = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { socket, connect, disconnect } = useChatStore();
-  
+  const { socket, connect } = useChatStore();
+
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [conversation, setConversation] = useState<any>(null);
@@ -52,7 +52,7 @@ const ChatWindow = () => {
         console.error('Failed to load chat', error);
       }
     };
-    
+
     if (id) fetchChatData();
   }, [id, navigate]);
 
@@ -132,15 +132,14 @@ const ChatWindow = () => {
         ) : (
           messages.map((msg, index) => {
             const isMe = msg.sender._id === user?._id;
-            
+
             // Logic to group dates could be added here
             return (
               <div key={msg._id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] rounded-2xl px-4 py-2 ${
-                  isMe 
-                    ? 'bg-primary text-primary-foreground rounded-tr-sm' 
+                <div className={`max-w-[75%] rounded-2xl px-4 py-2 ${isMe
+                    ? 'bg-primary text-primary-foreground rounded-tr-sm'
                     : 'bg-muted text-foreground rounded-tl-sm border border-border'
-                }`}>
+                  }`}>
                   <p className="whitespace-pre-wrap break-words">{msg.content}</p>
                   <p className={`text-[10px] mt-1 text-right ${isMe ? 'text-primary-foreground/70' : 'text-muted-foreground'}`}>
                     {format(new Date(msg.createdAt || Date.now()), 'HH:mm')}
